@@ -1,61 +1,72 @@
-# 💸 Expense Tracker Pro
+# 💰 ExpenseTracker Pro - Full Stack Financial Dashboard
 
-A modern, full-stack financial management application built with the MERN stack. Features a premium design, dual-theme support, and secure authentication.
+A professional, full-stack expense management application built with the MERN stack. Featuring a sleek, Apple-inspired UI, advanced analytics, and real-time budget tracking.
 
-## ✨ Features
+**🚀 Live Demo:** [https://amrut-expense-tracker.onrender.com](https://amrut-expense-tracker.onrender.com)
 
-- **🔐 Secure Auth**: JWT-based authentication with Bcrypt password hashing.
-- **🌓 Dual Themes**: 
-  - **Dark Mode**: Sleek glassmorphism for a modern feel.
-  - **Light Mode**: Pristine, minimalist "Apple-style" clean white look.
-- **📝 Full CRUD**: Add, Edit, and Delete expenses with ease.
-- **📊 Analytics**: Visual category breakdown with dynamic progress bars.
-- **📱 Responsive**: Optimized for all screen sizes using Tailwind CSS.
-- **☁️ Cloud Powered**: Integrated with MongoDB Atlas for reliable storage.
+---
 
-## 🚀 Getting Started
+## ✨ Key Features
 
-### Prerequisites
-- Node.js installed
-- MongoDB Atlas account (or local MongoDB)
+### 📊 Advanced Analytics
+- **Dynamic Charting**: Real-time 30-day spending trends powered by Chart.js.
+- **Category Breakdown**: Automatic percentage calculations and visual distribution of expenses.
+- **Theme-Aware Graphs**: Charts automatically adapt their colors to match Light or Dark mode.
 
-### Installation
+### 🎯 Smart Budgeting & Alerts
+- **Monthly Limits**: Set a personal spending goal for the month.
+- **Live Progress Bar**: Visual feedback on how much of your budget remains.
+- **Over-Budget Alerts**: The dashboard turns into a "Warning Mode" (vibrant red) when you exceed your limit.
 
-1. **Clone the repository:**
+### 🔍 Pro-Level Management
+- **Search & Filter**: Find specific transactions instantly with the real-time search bar.
+- **Pagination**: High-performance listing that handles hundreds of transactions smoothly.
+- **Inline Editing**: Modify your expenses directly from the list with a synchronized form.
+
+### 🌓 Premium Design System
+- **Dual-Theme Engine**: Seamless transition between a "Pure White" light mode and a high-contrast dark mode.
+- **Glassmorphism**: Modern, translucent UI elements with subtle micro-animations.
+- **Mobile Responsive**: Perfectly optimized for desktop, tablet, and smartphone screens.
+
+---
+
+## 🛠️ Tech Stack
+
+- **Frontend**: React (Vite), Tailwind CSS, Lucide-React, Chart.js, Axios.
+- **Backend**: Node.js, Express.js, JWT Authentication.
+- **Database**: MongoDB Atlas (Mongoose).
+- **Deployment**: Render (Frontend & Backend).
+
+---
+
+## 📸 Screenshots
+
+### Dashboard (Light Mode)
+![Dashboard](/image.png)
+
+### Login Page
+![Login](/login-page.png)
+
+---
+
+## ⚙️ Installation
+
+1. Clone the repository:
    ```bash
    git clone https://github.com/Amrut-1429/Expense-Tracker.git
-   cd Expense-Tracker
    ```
 
-2. **Setup Backend:**
-   ```bash
-   cd backend
-   npm install
-   ```
-   Create a `.env` file in the `backend` folder:
-   ```env
-   PORT=5000
-   MONGO_URI=your_mongodb_connection_string
-   JWT_SECRET=your_jwt_secret
-   ```
+2. **Backend Setup**:
+   - `cd backend`
+   - `npm install`
+   - Create a `.env` file with `MONGO_URI` and `JWT_SECRET`.
+   - `npm run dev`
 
-3. **Setup Frontend:**
-   ```bash
-   cd ../frontend
-   npm install
-   ```
+3. **Frontend Setup**:
+   - `cd frontend`
+   - `npm install`
+   - `npm run dev`
 
-4. **Run the Project:**
-   Use the included `run_project.bat` (on Windows) or:
-   - Backend: `npm run dev` (in backend folder)
-   - Frontend: `npm run dev` (in frontend folder)
+---
 
-## 🛠 Tech Stack
-
-- **Frontend**: React, Tailwind CSS, Lucide Icons, Axios
-- **Backend**: Node.js, Express.js
-- **Database**: MongoDB (Mongoose)
-- **Deployment**: Git, MongoDB Atlas
-
-## 📄 License
-MIT License
+Developed with ❤️ by Amrut.

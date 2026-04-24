@@ -1,19 +1,40 @@
 import { Wallet, PieChart, TrendingUp } from 'lucide-react';
 
 const Summary = ({ summary }) => {
-  const { grandTotal, breakdown } = summary;
+  const { grandTotal, breakdown, budgetLimit } = summary;
+  const percentOfBudget = budgetLimit > 0 ? (grandTotal / budgetLimit) * 100 : 0;
+  const isOverBudget = grandTotal > budgetLimit && budgetLimit > 0;
 
   return (
     <div className="space-y-4">
       {/* Total Card */}
-      <div className="relative overflow-hidden bg-gradient-to-br from-blue-600 to-blue-800 p-6 rounded-2xl shadow-xl shadow-blue-900/20">
+      <div className={`relative overflow-hidden ${isOverBudget ? 'bg-gradient-to-br from-red-600 to-red-800' : 'bg-gradient-to-br from-blue-600 to-blue-800'} p-6 rounded-2xl shadow-xl transition-all duration-500`}>
         <div className="absolute -right-4 -top-4 text-white/10">
           <Wallet size={120} />
         </div>
         <div className="relative z-10">
-          <p className="text-blue-100 text-sm font-medium mb-1">Total Balance Spent</p>
+          <p className="text-white/70 text-sm font-medium mb-1">Total Balance Spent</p>
           <h3 className="text-4xl font-bold text-white">${grandTotal.toLocaleString()}</h3>
-          <div className="mt-4 flex items-center gap-2 text-blue-200 text-xs">
+          
+          {budgetLimit > 0 && (
+            <div className="mt-6 space-y-2">
+              <div className="flex justify-between text-xs text-white/80">
+                <span>Monthly Budget: ${budgetLimit.toLocaleString()}</span>
+                <span>{percentOfBudget.toFixed(0)}%</span>
+              </div>
+              <div className="w-full h-2 bg-white/20 rounded-full overflow-hidden">
+                <div 
+                  className={`h-full ${isOverBudget ? 'bg-white' : 'bg-green-400'} rounded-full transition-all duration-1000`}
+                  style={{ width: `${Math.min(percentOfBudget, 100)}%` }}
+                />
+              </div>
+              {isOverBudget && (
+                <p className="text-[10px] font-bold text-white uppercase tracking-wider animate-pulse">⚠️ Budget Exceeded!</p>
+              )}
+            </div>
+          )}
+
+          <div className="mt-4 flex items-center gap-2 text-white/60 text-xs">
             <TrendingUp size={14} />
             <span>Across {breakdown.length} categories</span>
           </div>

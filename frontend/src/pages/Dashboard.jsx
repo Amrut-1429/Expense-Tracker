@@ -6,14 +6,19 @@ import ThemeToggle from '../components/ThemeToggle';
 import ExpenseForm from '../components/ExpenseForm';
 import ExpenseList from '../components/ExpenseList';
 import Summary from '../components/Summary';
-import { LogOut, LayoutDashboard, PlusCircle, Filter } from 'lucide-react';
+import StatsChart from '../components/StatsChart';
+import BudgetSettings from '../components/BudgetSettings';
+import { LogOut, LayoutDashboard, PlusCircle, Filter, Search, ChevronLeft, ChevronRight } from 'lucide-react';
 
 const Dashboard = () => {
   const { user, logout } = useAuth();
-  const { isDark, toggleTheme } = useTheme();
+  const { isDark } = useTheme();
   const [expenses, setExpenses] = useState([]);
-  const [summary, setSummary] = useState({ grandTotal: 0, breakdown: [] });
+  const [summary, setSummary] = useState({ grandTotal: 0, breakdown: [], budgetLimit: 0 });
   const [category, setCategory] = useState('all');
+  const [search, setSearch] = useState('');
+  const [page, setPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(1);
   const [isLoading, setIsLoading] = useState(true);
   const [editingExpense, setEditingExpense] = useState(null);
 
@@ -29,8 +34,9 @@ const Dashboard = () => {
 
   const fetchExpenses = async () => {
     try {
-      const { data } = await API.get(`/expenses?category=${category}`);
+      const { data } = await API.get(`/expenses?category=${category}&search=${search}&page=${page}&limit=5`);
       setExpenses(data.expenses);
+      setTotalPages(data.totalPages);
     } catch (err) {
       console.error('Error fetching expenses', err);
     }
@@ -52,7 +58,7 @@ const Dashboard = () => {
       setIsLoading(false);
     };
     loadData();
-  }, [category]);
+  }, [category, search, page]);
 
   const handleAddExpense = () => {
     fetchExpenses();
@@ -98,10 +104,15 @@ const Dashboard = () => {
       </header>
 
       <main className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-3 gap-8">
-        {/* Left Column: Stats and Add Form */}
+        {/* Left Column */}
         <div className="lg:col-span-1 space-y-8">
           <Summary summary={summary} />
           
+          <BudgetSettings 
+            currentBudget={summary.budgetLimit} 
+            onUpdate={fetchSummary} 
+          />
+
           <div className="glass p-6 rounded-2xl shadow-sm">
             <div className="flex items-center gap-2 mb-6">
               <PlusCircle className="text-blue-500 dark:text-blue-400" size={20} />
@@ -115,14 +126,30 @@ const Dashboard = () => {
           </div>
         </div>
 
-        {/* Right Column: List and Filters */}
+        {/* Right Column */}
         <div className="lg:col-span-2 space-y-6">
+          <StatsChart />
+
           <div className="flex flex-col gap-6">
-            <div className="flex justify-between items-center">
+            <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
               <h2 className="text-xl font-bold">Recent Expenses</h2>
+              
+              <div className="relative w-full md:w-64">
+                <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" size={16} />
+                <input
+                  type="text"
+                  placeholder="Search expenses..."
+                  value={search}
+                  onChange={(e) => {
+                    setSearch(e.target.value);
+                    setPage(1);
+                  }}
+                  className="w-full pl-10 pr-4 py-2 text-sm"
+                />
+              </div>
             </div>
             
-            {/* Enhanced Category Pills */}
+            {/* Category Pills */}
             <div className="flex items-center gap-2 overflow-x-auto no-scrollbar pb-2">
               <div className="p-2 bg-slate-100 dark:bg-slate-800 rounded-lg text-slate-400">
                 <Filter size={18} />
@@ -130,7 +157,10 @@ const Dashboard = () => {
               {categories.map((cat) => (
                 <button
                   key={cat.id}
-                  onClick={() => setCategory(cat.id)}
+                  onClick={() => {
+                    setCategory(cat.id);
+                    setPage(1);
+                  }}
                   className={`px-4 py-2 rounded-full text-sm font-medium whitespace-nowrap transition-all border ${
                     category === cat.id
                       ? 'bg-blue-600 border-blue-600 text-white shadow-lg shadow-blue-600/20'
@@ -149,6 +179,27 @@ const Dashboard = () => {
             onDelete={handleDeleteExpense} 
             isLoading={isLoading} 
           />
+
+          {/* Pagination */}
+          {totalPages > 1 && (
+            <div className="flex justify-center items-center gap-4 pt-4">
+              <button
+                disabled={page === 1}
+                onClick={() => setPage(prev => prev - 1)}
+                className="p-2 bg-slate-100 dark:bg-slate-800 rounded-lg disabled:opacity-30"
+              >
+                <ChevronLeft size={20} />
+              </button>
+              <span className="text-sm font-medium">Page {page} of {totalPages}</span>
+              <button
+                disabled={page === totalPages}
+                onClick={() => setPage(prev => prev + 1)}
+                className="p-2 bg-slate-100 dark:bg-slate-800 rounded-lg disabled:opacity-30"
+              >
+                <ChevronRight size={20} />
+              </button>
+            </div>
+          )}
         </div>
       </main>
     </div>
