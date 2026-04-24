@@ -1,6 +1,7 @@
 const express = require('express');
 const jwt = require('jsonwebtoken');
 const User = require('../models/User');
+const { protect } = require('../middleware/auth');
 
 const router = express.Router();
 
@@ -28,14 +29,14 @@ router.post('/register', async (req, res) => {
     res.status(201).json({
       message: 'Registration successful',
       token,
-      user: { id: user._id, name: user.name, email: user.email },
+      user: { id: user._id, name: user.name, email: user.email, monthlyBudget: 0 },
     });
   } catch (error) {
-    if (error.name === 'ValidationError') {
-      const messages = Object.values(error.errors).map((e) => e.message);
-      return res.status(400).json({ message: messages.join(', ') });
-    }
-    res.status(500).json({ message: 'Server error during registration' });
+    console.error('Register Error:', error);
+    res.status(500).json({ 
+      message: 'Server error during registration', 
+      error: error.message 
+    });
   }
 });
 
@@ -59,14 +60,45 @@ router.post('/login', async (req, res) => {
     }
 
     const token = generateToken(user._id);
+    const monthlyBudget = user.monthlyBudget !== undefined ? user.monthlyBudget : 0;
 
     res.json({
       message: 'Login successful',
       token,
-      user: { id: user._id, name: user.name, email: user.email },
+      user: { 
+        id: user._id, 
+        name: user.name, 
+        email: user.email, 
+        monthlyBudget 
+      },
     });
   } catch (error) {
-    res.status(500).json({ message: 'Server error during login' });
+    console.error('Login Error:', error);
+    res.status(500).json({ message: 'Server error during login', error: error.message });
+  }
+});
+
+// PUT /api/auth/profile — Update user settings (budget)
+router.put('/profile', protect, async (req, res) => {
+  try {
+    const { monthlyBudget } = req.body;
+    const user = await User.findByIdAndUpdate(
+      req.user._id,
+      { monthlyBudget },
+      { new: true }
+    );
+    res.json({ 
+      message: 'Profile updated', 
+      user: { 
+        id: user._id, 
+        name: user.name, 
+        email: user.email, 
+        monthlyBudget: user.monthlyBudget 
+      } 
+    });
+  } catch (error) {
+    console.error('Profile Update Error:', error);
+    res.status(500).json({ message: 'Server error updating profile' });
   }
 });
 

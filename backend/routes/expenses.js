@@ -34,23 +34,38 @@ router.post('/', async (req, res) => {
   }
 });
 
-// GET /api/expenses — Get all expenses (optional ?category=food filter)
+// GET /api/expenses — Get all expenses with advanced filtering & pagination
 router.get('/', async (req, res) => {
   try {
+    const { category, search, startDate, endDate, page = 1, limit = 10 } = req.query;
     const query = { user: req.user._id };
 
-    if (req.query.category && req.query.category !== 'all') {
-      query.category = req.query.category;
+    if (category && category !== 'all') query.category = category;
+    if (search) query.title = { $regex: search, $options: 'i' };
+    if (startDate || endDate) {
+      query.date = {};
+      if (startDate) query.date.$gte = new Date(startDate);
+      if (endDate) query.date.$lte = new Date(endDate);
     }
 
-    const expenses = await Expense.find(query).sort({ date: -1 });
-    res.json({ expenses, count: expenses.length });
+    const total = await Expense.countDocuments(query);
+    const expenses = await Expense.find(query)
+      .sort({ date: -1 })
+      .limit(limit * 1)
+      .skip((page - 1) * limit);
+
+    res.json({
+      expenses,
+      totalPages: Math.ceil(total / limit),
+      currentPage: page,
+      totalCount: total,
+    });
   } catch (error) {
     res.status(500).json({ message: 'Server error fetching expenses' });
   }
 });
 
-// GET /api/expenses/summary — Total + breakdown by category
+// GET /api/expenses/summary — Total + breakdown by category with percentages
 router.get('/summary', async (req, res) => {
   try {
     const summary = await Expense.aggregate([
@@ -69,14 +84,44 @@ router.get('/summary', async (req, res) => {
 
     res.json({
       grandTotal,
+      budgetLimit: req.user.monthlyBudget || 0,
       breakdown: summary.map((item) => ({
         category: item._id,
         total: item.total,
         count: item.count,
+        percentage: grandTotal > 0 ? ((item.total / grandTotal) * 100).toFixed(1) : 0,
       })),
     });
   } catch (error) {
     res.status(500).json({ message: 'Server error fetching summary' });
+  }
+});
+
+// GET /api/expenses/stats — Daily trends for Chart.js
+router.get('/stats', async (req, res) => {
+  try {
+    const thirtyDaysAgo = new Date();
+    thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
+
+    const stats = await Expense.aggregate([
+      { 
+        $match: { 
+          user: req.user._id,
+          date: { $gte: thirtyDaysAgo }
+        } 
+      },
+      {
+        $group: {
+          _id: { $dateToString: { format: "%Y-%m-%d", date: "$date" } },
+          total: { $sum: "$amount" }
+        }
+      },
+      { $sort: { "_id": 1 } }
+    ]);
+
+    res.json(stats);
+  } catch (error) {
+    res.status(500).json({ message: 'Server error fetching stats' });
   }
 });
 

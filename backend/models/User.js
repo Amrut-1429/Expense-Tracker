@@ -20,6 +20,10 @@ const userSchema = new mongoose.Schema(
       required: [true, 'Password is required'],
       minlength: 6,
     },
+    monthlyBudget: {
+      type: Number,
+      default: 0,
+    },
   },
   { timestamps: true }
 );
