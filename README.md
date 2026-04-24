@@ -1,44 +1,61 @@
-# Expense Tracker Full Stack App
+# 💸 Expense Tracker Pro
 
-A professional, full-stack expense tracking application built with Node.js, Express, MongoDB, and React.
+A modern, full-stack financial management application built with the MERN stack. Features a premium design, dual-theme support, and secure authentication.
 
-## 🚀 Quick Start
+## ✨ Features
 
-To run the full project automatically:
-1. Double-click the `run_project.bat` file in this directory.
-2. It will open two terminal windows, install dependencies, and start both servers.
+- **🔐 Secure Auth**: JWT-based authentication with Bcrypt password hashing.
+- **🌓 Dual Themes**: 
+  - **Dark Mode**: Sleek glassmorphism for a modern feel.
+  - **Light Mode**: Pristine, minimalist "Apple-style" clean white look.
+- **📝 Full CRUD**: Add, Edit, and Delete expenses with ease.
+- **📊 Analytics**: Visual category breakdown with dynamic progress bars.
+- **📱 Responsive**: Optimized for all screen sizes using Tailwind CSS.
+- **☁️ Cloud Powered**: Integrated with MongoDB Atlas for reliable storage.
+
+## 🚀 Getting Started
+
+### Prerequisites
+- Node.js installed
+- MongoDB Atlas account (or local MongoDB)
+
+### Installation
+
+1. **Clone the repository:**
+   ```bash
+   git clone https://github.com/Amrut-1429/Expense-Tracker.git
+   cd Expense-Tracker
+   ```
+
+2. **Setup Backend:**
+   ```bash
+   cd backend
+   npm install
+   ```
+   Create a `.env` file in the `backend` folder:
+   ```env
+   PORT=5000
+   MONGO_URI=your_mongodb_connection_string
+   JWT_SECRET=your_jwt_secret
+   ```
+
+3. **Setup Frontend:**
+   ```bash
+   cd ../frontend
+   npm install
+   ```
+
+4. **Run the Project:**
+   Use the included `run_project.bat` (on Windows) or:
+   - Backend: `npm run dev` (in backend folder)
+   - Frontend: `npm run dev` (in frontend folder)
 
 ## 🛠 Tech Stack
 
-### Backend
-- **Node.js & Express**: Fast and scalable server framework.
-- **MongoDB & Mongoose**: Flexible NoSQL database and ODM.
-- **JWT (JSON Web Tokens)**: Secure authentication.
-- **Bcryptjs**: Password hashing for security.
+- **Frontend**: React, Tailwind CSS, Lucide Icons, Axios
+- **Backend**: Node.js, Express.js
+- **Database**: MongoDB (Mongoose)
+- **Deployment**: Git, MongoDB Atlas
 
-### Frontend
-- **React (Vite)**: Modern UI library with fast HMR.
-- **Tailwind CSS**: Premium styling with glassmorphism and custom gradients.
-- **Lucide Icons**: Beautiful, consistent iconography.
-- **Axios**: Promised-based HTTP client for API calls.
-
-## 📝 Features
-- User Registration & Login with secure sessions.
-- Protected Dashboard for managing personal expenses.
-- Add, View, and Delete expenses.
-- Filter by Category (Food, Travel, Shopping, Health, Entertainment, Other).
-- Visual Summary with spending breakdown and totals.
-
-## ⚠️ Troubleshooting
-### MongoDB Connection Error
-If the backend fails to connect to MongoDB:
-1. Ensure MongoDB is running locally at `mongodb://localhost:27017`.
-2. **OR** use **MongoDB Atlas** (Cloud):
-   - Replace the `MONGO_URI` in `backend/.env` with your Atlas connection string.
-
-### 'npm' is not recognized
-If you see this error, you need to install [Node.js](https://nodejs.org/) on your computer.
-
-## 📂 Structure
-- `/backend`: API logic, models, and middleware.
-- `/frontend`: React application and assets.
+## 📄 License
+MIT License
