@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback, memo } from 'react';
 import { useAuth } from '../context/AuthContext';
 import { useTheme } from '../context/ThemeContext';
 import API from '../api/axios';
@@ -9,6 +9,11 @@ import Summary from '../components/Summary';
 import StatsChart from '../components/StatsChart';
 import BudgetSettings from '../components/BudgetSettings';
 import { LogOut, LayoutDashboard, PlusCircle, Filter, Search, ChevronLeft, ChevronRight } from 'lucide-react';
+
+const MemoizedSummary = memo(Summary);
+const MemoizedStatsChart = memo(StatsChart);
+const MemoizedExpenseList = memo(ExpenseList);
+const MemoizedBudgetSettings = memo(BudgetSettings);
 
 const Dashboard = () => {
   const { user, logout } = useAuth();
@@ -66,7 +71,7 @@ const Dashboard = () => {
     setEditingExpense(null);
   };
 
-  const handleDeleteExpense = async (id) => {
+  const handleDeleteExpense = useCallback(async (id) => {
     try {
       await API.delete(`/expenses/${id}`);
       fetchExpenses();
@@ -74,7 +79,7 @@ const Dashboard = () => {
     } catch (err) {
       console.error('Error deleting expense', err);
     }
-  };
+  }, [category, search, page]);
 
   return (
     <div className="min-h-screen bg-white dark:bg-slate-950 text-slate-900 dark:text-slate-100 p-4 md:p-8 transition-colors duration-300">
@@ -106,9 +111,9 @@ const Dashboard = () => {
       <main className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-3 gap-8">
         {/* Left Column */}
         <div className="lg:col-span-1 space-y-8">
-          <Summary summary={summary} />
+          <MemoizedSummary summary={summary} />
           
-          <BudgetSettings 
+          <MemoizedBudgetSettings 
             currentBudget={summary.budgetLimit} 
             onUpdate={fetchSummary} 
           />
@@ -128,7 +133,7 @@ const Dashboard = () => {
 
         {/* Right Column */}
         <div className="lg:col-span-2 space-y-6">
-          <StatsChart />
+          <MemoizedStatsChart />
 
           <div className="flex flex-col gap-6">
             <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
@@ -173,7 +178,7 @@ const Dashboard = () => {
             </div>
           </div>
 
-          <ExpenseList 
+          <MemoizedExpenseList 
             expenses={expenses} 
             onEdit={setEditingExpense}
             onDelete={handleDeleteExpense} 

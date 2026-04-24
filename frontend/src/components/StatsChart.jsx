@@ -39,7 +39,7 @@ const StatsChart = () => {
           datasets: [
             {
               fill: true,
-              label: 'Daily Spending ($)',
+              label: 'Daily Spending (₹)',
               data: data.map(item => item.total),
               borderColor: '#3b82f6',
               backgroundColor: 'rgba(59, 130, 246, 0.1)',

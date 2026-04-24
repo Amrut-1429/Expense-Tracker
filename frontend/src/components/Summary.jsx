@@ -14,12 +14,12 @@ const Summary = ({ summary }) => {
         </div>
         <div className="relative z-10">
           <p className="text-white/70 text-sm font-medium mb-1">Total Balance Spent</p>
-          <h3 className="text-4xl font-bold text-white">${grandTotal.toLocaleString()}</h3>
+          <h3 className="text-4xl font-bold text-white">₹{grandTotal.toLocaleString()}</h3>
           
           {budgetLimit > 0 && (
             <div className="mt-6 space-y-2">
               <div className="flex justify-between text-xs text-white/80">
-                <span>Monthly Budget: ${budgetLimit.toLocaleString()}</span>
+                <span>Monthly Budget: ₹{budgetLimit.toLocaleString()}</span>
                 <span>{percentOfBudget.toFixed(0)}%</span>
               </div>
               <div className="w-full h-2 bg-white/20 rounded-full overflow-hidden">

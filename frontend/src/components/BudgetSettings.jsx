@@ -31,7 +31,7 @@ const BudgetSettings = ({ currentBudget, onUpdate }) => {
       
       <form onSubmit={handleUpdate} className="flex gap-2">
         <div className="relative flex-1">
-          <span className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400">$</span>
+          <span className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400">₹</span>
           <input
             type="number"
             value={budget}

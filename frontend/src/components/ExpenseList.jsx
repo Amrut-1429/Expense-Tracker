@@ -1,4 +1,4 @@
-import { Trash2, Edit2, Calendar, Tag, DollarSign, Utensils, Plane, ShoppingBag, HeartPulse, Gamepad2, MoreHorizontal } from 'lucide-react';
+import { Trash2, Edit2, Calendar, Tag, IndianRupee, Utensils, Plane, ShoppingBag, HeartPulse, Gamepad2, MoreHorizontal } from 'lucide-react';
 
 const ExpenseList = ({ expenses, onEdit, onDelete, isLoading }) => {
   if (isLoading) {
@@ -15,7 +15,7 @@ const ExpenseList = ({ expenses, onEdit, onDelete, isLoading }) => {
     return (
       <div className="glass p-12 text-center rounded-2xl">
         <div className="inline-flex items-center justify-center w-12 h-12 rounded-full bg-slate-800 text-slate-500 mb-4">
-          <DollarSign size={24} />
+          <IndianRupee size={24} />
         </div>
         <p className="text-slate-400">No expenses found. Start by adding one!</p>
       </div>
@@ -50,7 +50,7 @@ const ExpenseList = ({ expenses, onEdit, onDelete, isLoading }) => {
 
           <div className="flex items-center gap-6">
             <span className="text-xl font-extrabold text-slate-900 dark:text-white">
-              ${expense.amount.toLocaleString(undefined, { minimumFractionDigits: 2 })}
+              ₹{expense.amount.toLocaleString(undefined, { minimumFractionDigits: 2 })}
             </span>
             <div className="flex items-center gap-1 md:gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
               <button
@@ -83,7 +83,7 @@ const getCategoryIcon = (category) => {
     case 'health': return <HeartPulse size={20} />;
     case 'entertainment': return <Gamepad2 size={20} />;
     case 'other': return <MoreHorizontal size={20} />;
-    default: return <DollarSign size={20} />;
+    default: return <IndianRupee size={20} />;
   }
 };
 
